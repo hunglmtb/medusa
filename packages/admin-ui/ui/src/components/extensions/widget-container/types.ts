@@ -18,6 +18,7 @@ export type EntityMap = {
   "product_collection.details.before": ProductCollection
   "order.details.after": Order
   "order.details.before": Order
+  "order.details.fullfillment.after": Order
   "draft_order.details.after": DraftOrder
   "draft_order.details.before": DraftOrder
   "customer.details.after": Customer
@@ -53,7 +54,7 @@ export type EntityMap = {
   "gift_card.list.before"?: never | null | undefined
   // Login
   "login.before"?: never | null | undefined
-  "login.after"?: never | null | undefined
+  "login.after"?: Record<string, any> | null | undefined
 }
 
 export const PropKeyMap = {
@@ -63,6 +64,7 @@ export const PropKeyMap = {
   "product_collection.details.before": "productCollection",
   "order.details.after": "order",
   "order.details.before": "order",
+  "order.details.fullfillment.after": "order",
   "draft_order.details.after": "draftOrder",
   "draft_order.details.before": "draftOrder",
   "customer.details.after": "customer",
@@ -74,4 +76,5 @@ export const PropKeyMap = {
   "price_list.details.after": "priceList",
   "price_list.details.before": "priceList",
   custom_gift_card: "giftCard",
+  "login.after": "login",
 }

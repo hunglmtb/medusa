@@ -2,6 +2,7 @@ export const injectionZones = [
   // Order injection zones
   "order.details.before",
   "order.details.after",
+  "order.details.fullfillment.after",
   "order.list.before",
   "order.list.after",
   // Draft order injection zones

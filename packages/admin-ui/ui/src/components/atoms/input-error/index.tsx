@@ -41,30 +41,32 @@ const MultipleMessages = ({ messages }: { messages: MultipleFieldErrors }) => {
   const displayedError = errors[0]
   const remainderErrors = errors.slice(1)
 
-  return (
-    <div className="flex cursor-default items-center gap-x-1">
-      <p>{displayedError}</p>
-      {remainderErrors?.length > 0 && (
-        <Tooltip
+  const msg = remainderErrors?.length > 0 ? (
+      <Tooltip
           content={
             <div className="inter-small-regular text-rose-50">
               {remainderErrors.map((e, i) => {
                 return (
-                  <p key={i}>
-                    {Array.from(Array(i + 1)).map((_) => "*")}
-                    {e}
-                  </p>
+                    <p key={i}>
+                      {Array.from(Array(i + 1)).map((_) => "*")}
+                      {e}
+                    </p>
                 )
               })}
             </div>
           }
-        >
-          <p>
-            +{remainderErrors.length}{" "}
-            {remainderErrors.length > 1 ? "errors" : "error"}
-          </p>
-        </Tooltip>
-      )}
+      >
+        <p>
+          +{remainderErrors.length}{" "}
+          {remainderErrors.length > 1 ? "errors" : "error"}
+        </p>
+      </Tooltip>
+  ):null
+
+  return (
+    <div className="flex cursor-default items-center gap-x-1">
+      <p>{displayedError}</p>
+      {msg}
     </div>
   )
 }

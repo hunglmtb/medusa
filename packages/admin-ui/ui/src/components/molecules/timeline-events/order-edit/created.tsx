@@ -19,6 +19,7 @@ import EventContainer from "../event-container"
 import { OrderEditContext } from "../../../../domain/orders/edit/context"
 import CopyToClipboard from "../../../atoms/copy-to-clipboard"
 import { ByLine } from "."
+import {isShowOrderActions} from "../../../../constants/analytics";
 
 type EditCreatedProps = {
   event: OrderEditEvent
@@ -138,9 +139,11 @@ const EditCreated: React.FC<EditCreatedProps> = ({ event }) => {
           </div>
         )}
         <div>
-          <OrderEditChanges orderEdit={orderEdit} />
+          {
+            isShowOrderActions?<OrderEditChanges orderEdit={orderEdit} />:null
+          }
         </div>
-        {(orderEdit.status === "created" ||
+        {isShowOrderActions&&(orderEdit.status === "created" ||
           orderEdit.status === "requested") && (
           <div className="space-y-xsmall mt-large">
             {type === "created" ? (

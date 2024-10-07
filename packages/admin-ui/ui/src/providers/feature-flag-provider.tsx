@@ -42,6 +42,7 @@ export const FeatureFlagProvider = ({ children }: PropsWithChildren) => {
       return
     }
 
+    // @ts-ignore
     setFeatureFlags([
       ...store["feature_flags"],
       ...store["modules"].map((module) => ({

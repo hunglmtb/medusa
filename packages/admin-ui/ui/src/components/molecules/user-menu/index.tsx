@@ -1,6 +1,6 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 import { useAdminDeleteSession, useAdminGetSession } from "medusa-react"
-import React from "react"
+import React, {useCallback, useState} from "react"
 import { useNavigate } from "react-router-dom"
 import useNotification from "../../../hooks/use-notification"
 import { getErrorMessage } from "../../../utils/error-messages"
@@ -8,26 +8,30 @@ import Avatar from "../../atoms/avatar"
 import Button from "../../fundamentals/button"
 import GearIcon from "../../fundamentals/icons/gear-icon"
 import SignOutIcon from "../../fundamentals/icons/log-out-icon"
+import WidgetContainer from "../../extensions/widget-container";
+import {useWidgets} from "../../../providers/widget-provider";
 
 const UserMenu: React.FC = () => {
   const navigate = useNavigate()
 
   const { user, isLoading, remove } = useAdminGetSession()
   const { mutate } = useAdminDeleteSession()
-
+  const [onLogoutSuccess, setOnLogoutSuccess] = useState<(()=> Promise<void>) | null>(null)
   const notification = useNotification()
+  const { getWidgets } = useWidgets()
 
-  const logOut = () => {
+  const logOut = useCallback(() => {
     mutate(undefined, {
       onSuccess: () => {
         remove()
-        navigate("/login")
+        if(onLogoutSuccess) onLogoutSuccess().then(()=> navigate("/login"))
+        else navigate("/login")
       },
       onError: (err) => {
         notification("Failed to log out", getErrorMessage(err), "error")
       },
     })
-  }
+  }, [onLogoutSuccess])
   return (
     <div className="h-large w-large">
       <DropdownMenu.Root>
@@ -66,6 +70,17 @@ const UserMenu: React.FC = () => {
               <SignOutIcon size={20} />
               Sign out
             </Button>
+            {getWidgets("login.after").map((widget, i) => {
+              return (
+                  <WidgetContainer
+                      key={i}
+                      injectionZone={"login.after"}
+                      widget={widget}
+                      // @ts-ignore
+                      entity={{setOnLogoutSuccess}}
+                  />
+              )
+            })}
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>

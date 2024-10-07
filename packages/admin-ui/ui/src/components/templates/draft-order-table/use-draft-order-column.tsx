@@ -5,6 +5,7 @@ import { getColor } from "../../../utils/color"
 import StatusDot from "../../fundamentals/status-indicator"
 import CustomerAvatarItem from "../../molecules/customer-avatar-item"
 import Table from "../../molecules/table"
+import ImagePlaceholder from "../../fundamentals/image-placeholder";
 
 const useDraftOrderTableColumns = () => {
   const { t } = useTranslation()
@@ -59,22 +60,36 @@ const useDraftOrderTableColumns = () => {
           </Table.Cell>
         ),
       },
-      {
-        Header: t("draft-order-table-customer", "Customer"),
-        accessor: "cart",
-        Cell: ({ row, cell: { value, getCellProps } }) => (
-          <Table.Cell {...getCellProps()}>
-            <CustomerAvatarItem
-              customer={{
-                first_name: value?.first_name || "",
-                last_name: value?.last_name || "",
-                email: value.email,
-              }}
-              color={getColor(row.index)}
-            />
-          </Table.Cell>
-        ),
-      },
+        {
+            Header: t("draft-order-table-customer", "Customer"),
+            accessor: "cart",
+            Cell: ({ row, cell: { value, getCellProps } }) => (<>
+                    <Table.Cell {...getCellProps()}>
+                        {value?.metadata?.title  || "-"}
+                    </Table.Cell>
+                    <Table.Cell {...getCellProps()}>
+                        {value?.metadata?.cover_image? (
+                            <img
+                                src={value?.metadata?.cover_image}
+                                className="rounded-rounded object-cover"
+                            />
+                        ) : (
+                            <ImagePlaceholder />
+                        )}
+                    </Table.Cell>
+                    <Table.Cell {...getCellProps()}>
+                        <CustomerAvatarItem
+                            customer={{
+                                first_name: value?.first_name || "",
+                                last_name: value?.last_name || "",
+                                email: value.email,
+                            }}
+                            color={getColor(row.index)}
+                        />
+                    </Table.Cell>
+                </>
+            ),
+        },
       {
         Header: t("draft-order-table-status", "Status"),
         accessor: "status",

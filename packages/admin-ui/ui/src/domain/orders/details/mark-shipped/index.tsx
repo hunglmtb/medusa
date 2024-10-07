@@ -56,7 +56,7 @@ const MarkShippedModal: React.FC<MarkShippedModalProps> = ({
   // Allows us to listen to onChange events
   const trackingNumbers = fields.map((field, index) => ({
     ...field,
-    ...watchedFields[index],
+    ...watchedFields?.[index],
   }))
 
   const markOrderShipped = useAdminCreateShipment(orderId)

@@ -170,9 +170,9 @@ const DraftSummaryCard: React.FC<DraftSummaryCardProps> = ({ order }) => {
           >
             <div className="flex justify-center space-x-4">
               <div className="rounded-rounded flex h-[48px] w-[36px] items-center justify-center">
-                {item?.thumbnail ? (
+                {item?.thumbnail || cart?.metadata?.cover_image? (
                   <img
-                    src={item.thumbnail}
+                    src={item.thumbnail || cart?.metadata?.cover_image}
                     className="rounded-rounded object-cover"
                   />
                 ) : (

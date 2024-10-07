@@ -50,6 +50,7 @@ import EditRequested from "../../molecules/timeline-events/order-edit/requested"
 import OrderPlaced from "../../molecules/timeline-events/order-placed"
 import Refund from "../../molecules/timeline-events/refund"
 import Return from "../../molecules/timeline-events/return"
+import {isShowOrderActions} from "../../../constants/analytics";
 
 type TimelineProps = {
   orderId: string
@@ -75,7 +76,7 @@ const Timeline: React.FC<TimelineProps> = ({ orderId }) => {
     open: openRegisterClaim,
   } = useToggleState()
 
-  const actions: ActionType[] = [
+  const actions: ActionType[] = isShowOrderActions?[
     {
       icon: <BackIcon size={20} />,
       label: t("timeline-request-return", "Request Return"),
@@ -91,7 +92,7 @@ const Timeline: React.FC<TimelineProps> = ({ orderId }) => {
       label: t("timeline-register-claim", "Register Claim"),
       onClick: openRegisterClaim,
     },
-  ]
+  ]:[]
 
   const handleCreateNote = (value: string | undefined) => {
     if (!value) {

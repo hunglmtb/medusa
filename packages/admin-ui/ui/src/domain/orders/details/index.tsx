@@ -69,6 +69,7 @@ import SummaryCard from "./detail-cards/summary"
 import EmailModal from "./email-modal"
 import MarkShippedModal from "./mark-shipped"
 import CreateRefundModal from "./refund"
+import { isShowOrderActions } from "../../../constants/analytics"
 
 type OrderDetailFulfillment = {
   title: string
@@ -401,9 +402,9 @@ const OrderDetails = () => {
                     </div>
                   </div>
                 </BodyCard>
-
-                <SummaryCard order={order} reservations={reservations || []} />
-
+                {
+                  isShowOrderActions?<SummaryCard order={order} reservations={reservations || []} />:null
+                }
                 <BodyCard
                   className={"h-auto min-h-0 w-full"}
                   title={t("details-payment", "Payment")}
@@ -473,53 +474,67 @@ const OrderDetails = () => {
                     </div>
                   </div>
                 </BodyCard>
-                <BodyCard
-                  className={"h-auto min-h-0 w-full"}
-                  title={t("details-fulfillment", "Fulfillment")}
-                  status={
-                    <FulfillmentStatusComponent
-                      status={order.fulfillment_status}
-                    />
-                  }
-                  customActionable={
-                    order.status !== "canceled" &&
-                    anyItemsToFulfil && (
-                      <Button
-                        variant="secondary"
-                        size="small"
-                        onClick={() => setShowFulfillment(true)}
-                      >
-                        {t("details-create-fulfillment", "Create Fulfillment")}
-                      </Button>
-                    )
-                  }
-                >
-                  <div className="mt-6">
-                    {order.shipping_methods.map((method) => (
-                      <div className="flex flex-col" key={method.id}>
+                {
+                  isShowOrderActions?<BodyCard
+                      className={"h-auto min-h-0 w-full"}
+                      title={t("details-fulfillment", "Fulfillment")}
+                      status={
+                        <FulfillmentStatusComponent
+                            status={order.fulfillment_status}
+                        />
+                      }
+                      customActionable={
+                          order.status !== "canceled" &&
+                          anyItemsToFulfil && (
+                              <Button
+                                  variant="secondary"
+                                  size="small"
+                                  onClick={() => setShowFulfillment(true)}
+                              >
+                                {t("details-create-fulfillment", "Create Fulfillment")}
+                              </Button>
+                          )
+                      }
+                  >
+                    <div className="mt-6">
+                      {order.shipping_methods.map((method) => (
+                          <div className="flex flex-col" key={method.id}>
                         <span className="inter-small-regular text-grey-50">
                           {t("details-shipping-method", "Shipping Method")}
                         </span>
-                        <span className="inter-small-regular text-grey-90 mt-2">
+                            <span className="inter-small-regular text-grey-90 mt-2">
                           {method?.shipping_option?.name || ""}
                         </span>
-                        <div className="mt-4 flex w-full flex-grow items-center">
-                          <JSONView data={method?.data} />
-                        </div>
-                      </div>
-                    ))}
-                    <div className="inter-small-regular mt-6 ">
-                      {allFulfillments.map((fulfillmentObj, i) => (
-                        <FormattedFulfillment
-                          key={i}
-                          order={order}
-                          fulfillmentObj={fulfillmentObj}
-                          setFullfilmentToShip={setFullfilmentToShip}
-                        />
+                            <div className="mt-4 flex w-full flex-grow items-center">
+                              <JSONView data={method?.data} />
+                            </div>
+                          </div>
                       ))}
+                      <div className="inter-small-regular mt-6 ">
+                        {allFulfillments.map((fulfillmentObj, i) => (
+                            <FormattedFulfillment
+                                key={i}
+                                order={order}
+                                fulfillmentObj={fulfillmentObj}
+                                setFullfilmentToShip={setFullfilmentToShip}
+                            />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </BodyCard>
+                  </BodyCard>:null
+                }
+                <div>
+                  {getWidgets("order.details.fullfillment.after").map((widget, i) => {
+                    return (
+                        <WidgetContainer
+                            key={i}
+                            injectionZone={"order.details.fullfillment.after"}
+                            widget={widget}
+                            entity={order}
+                        />
+                    )
+                  })}
+                </div>
                 <BodyCard
                   className={"h-auto min-h-0 w-full"}
                   title={t("details-customer", "Customer")}
